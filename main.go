@@ -21,7 +21,7 @@ func main() {
 		return
 	}
 
-	if len(os.Args) != 2 {
+	if len(os.Args) < 2 {
 		log.Println("missing repository url.")
 		return
 	}
@@ -31,6 +31,10 @@ func main() {
 	if !url.Valid() {
 		log.Println("invalid url format.")
 		return
+	}
+
+	if len(os.Args) >= 3 {
+		config.WorkspaceOverride = os.Args[2]
 	}
 
 	cloner := service.Kaminoan{}
