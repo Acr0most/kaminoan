@@ -12,7 +12,7 @@ Easy to use cli tool for organize your repositories.
 
 ### workspace
 * if workspace is set all your repositories you clone this Kaminoan are stored under this location
-* TODO: if workspace is empty store the repository relative to your actual path
+* if workspace is empty stores the repository relative to your actual path
 
 ## Usage
 * clone this repository

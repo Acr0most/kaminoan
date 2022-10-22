@@ -12,9 +12,10 @@ import (
 )
 
 type Config struct {
-	Workspace  string `json:"workspace"`
-	path       string
-	configFile string
+	Workspace         string `json:"workspace"`
+	WorkspaceOverride string
+	path              string
+	configFile        string
 }
 
 func NewConfig() *Config {
@@ -28,7 +29,7 @@ func NewConfig() *Config {
 
 func (t *Config) Load() bool {
 	if _, err := os.Stat(t.configFile); errors.Is(err, os.ErrNotExist) {
-		log.Print(fmt.Sprintf("Missing config file %s.\n\nTo create the file we need to know your default workspace directory.\nIf you want to clone repository absolute to the directory you're calling the command use empty string.", t.configFile))
+		fmt.Printf("Missing config file %s.\n\nTo create the file we need to know your default workspace directory.\nIf you want to clone repository absolute to the directory you're calling the command use empty string.\n> ", t.configFile)
 		reader := bufio.NewReader(os.Stdin)
 		text, _ := reader.ReadString('\n')
 		text = strings.Trim(text, " \n")
@@ -78,4 +79,12 @@ func (t *Config) Create() bool {
 	_, _ = jsonFile.Write(content)
 
 	return true
+}
+
+func (t *Config) GetWorkspace() string {
+	if t.WorkspaceOverride != "" {
+		return t.WorkspaceOverride
+	}
+
+	return t.Workspace
 }

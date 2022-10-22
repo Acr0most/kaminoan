@@ -13,7 +13,7 @@ import (
 type Kaminoan struct{}
 
 func (t *Kaminoan) Clone(repository *model.Repository, config *model.Config) {
-	path := config.Workspace
+	path := config.GetWorkspace()
 	if !strings.HasSuffix(config.Workspace, "/") {
 		path += "/"
 	}
