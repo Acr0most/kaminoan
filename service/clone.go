@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Acr0most/kaminoan/model"
+	"github.com/spf13/viper"
 	"log"
 	"os"
 	"os/exec"
@@ -12,9 +13,9 @@ import (
 
 type Kaminoan struct{}
 
-func (t *Kaminoan) Clone(repository *model.Repository, config *model.Config) {
-	path := config.GetWorkspace()
-	if !strings.HasSuffix(config.Workspace, "/") {
+func (t *Kaminoan) Clone(repository *model.Repository) {
+	path := viper.GetString("Workspace")
+	if !strings.HasSuffix(path, "/") {
 		path += "/"
 	}
 	path += repository.Path()
