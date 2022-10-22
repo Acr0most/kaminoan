@@ -7,12 +7,17 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 type Kaminoan struct{}
 
 func (t *Kaminoan) Clone(repository *model.Repository, config *model.Config) {
-	path := config.Workspace + "/" + repository.Path()
+	path := config.Workspace
+	if !strings.HasSuffix(config.Workspace, "/") {
+		path += "/"
+	}
+	path += repository.Path()
 
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		if mkdirErr := os.MkdirAll(path, os.ModePerm); mkdirErr != nil {
