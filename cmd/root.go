@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Acr0most/kaminoan/service"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"os"
 )
 
@@ -12,6 +13,7 @@ const AppVersion = "0.0.1"
 var (
 	// Used for flags.
 	cfgFile string
+	verbose bool
 
 	rootCmd = &cobra.Command{
 		Use:   "kaminoan",
@@ -28,6 +30,7 @@ func Execute() error {
 
 func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kaminoan/settings.json)")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "", false, "verbose")
 	rootCmd.Flags().BoolP("version", "v", false, "Show the version and exit.")
 
 	cobra.OnInitialize(initConfig)
@@ -39,6 +42,10 @@ func root(cmd *cobra.Command, args []string) {
 	if err == nil && version != false {
 		fmt.Println("kaminoan " + AppVersion)
 		os.Exit(0)
+	}
+
+	if verbose {
+		viper.Set("verbose", true)
 	}
 
 	if len(args) > 0 {
