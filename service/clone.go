@@ -18,7 +18,7 @@ import (
 type Kaminoan struct{}
 
 func (t *Kaminoan) Clone(repository *model.Repository) error {
-	path := viper.GetString("Workspace")
+	path := viper.GetString("workspace")
 	if !strings.HasSuffix(path, "/") {
 		path += "/"
 	}
@@ -93,17 +93,10 @@ func perhapsUpdateRepository(path string, repository *model.Repository) error {
 }
 
 func getSSHAuth() (transport.AuthMethod, error) {
-	// assume default paths for ssh keys with no password
-	password := ""
+	password := viper.GetString("auth.private_key_password")
+	privateKeyFile := viper.GetString("auth.private_key_file")
 
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return nil, err
-	}
-
-	privateKeyFile := home + "/.ssh/id_rsa"
-
-	_, err = os.Stat(privateKeyFile)
+	_, err := os.Stat(privateKeyFile)
 	if err != nil {
 		return nil, err
 	}

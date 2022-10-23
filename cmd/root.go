@@ -30,8 +30,8 @@ func Execute() error {
 
 func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kaminoan/settings.json)")
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "", false, "verbose")
-	rootCmd.Flags().BoolP("version", "v", false, "Show the version and exit.")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose")
+	rootCmd.Flags().BoolP("version", "", false, "Show the version and exit.")
 
 	cobra.OnInitialize(initConfig)
 }
