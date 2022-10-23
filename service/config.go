@@ -11,11 +11,13 @@ import (
 )
 
 var (
+	home   string
 	appDir string
 )
 
 func init() {
-	home, err := os.UserHomeDir()
+	var err error
+	home, err = os.UserHomeDir()
 	cobra.CheckErr(err)
 	appDir = home + "/.kaminoan/"
 }
@@ -51,7 +53,10 @@ If you want to clone repository absolute to the directory you're calling the com
 			text, _ := reader.ReadString('\n')
 			text = strings.Trim(text, " \n")
 
-			viper.Set("Workspace", text)
+			viper.Set("workspace", text)
+			viper.Set("auth.private_key_file", home+"/.ssh/id_rsa")
+			viper.Set("auth.private_key_password", "")
+
 			return viper.WriteConfig()
 		} else {
 			return err
