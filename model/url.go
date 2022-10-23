@@ -26,6 +26,17 @@ func (t *Repository) Valid() bool {
 	}
 
 	if strings.HasPrefix(t.inputUrl, "git@") {
+		t.inputUrl = strings.Replace(t.inputUrl, "git@github.com:", "https://github.com/", -1)
+		t.mode = HTTPS
+
+		// TODO investigate why my ssh key isn't working :)
+
+		return true
+	}
+
+	if strings.HasPrefix(t.inputUrl, "git@") {
+		t.inputUrl = strings.Replace(t.inputUrl, "git@github.com:", "https://github.com/", -1)
+
 		t.mode = SSH
 		return true
 	}
@@ -49,4 +60,8 @@ func (t *Repository) Path() string {
 	}
 
 	return t.path
+}
+
+func (t *Repository) Mode() Mode {
+	return t.mode
 }

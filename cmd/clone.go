@@ -4,6 +4,8 @@ import (
 	"github.com/Acr0most/kaminoan/model"
 	"github.com/Acr0most/kaminoan/service"
 	"github.com/spf13/cobra"
+	"log"
+	"os"
 )
 
 var cloneCmd = &cobra.Command{
@@ -21,6 +23,11 @@ func init() {
 func clone(cmd *cobra.Command, args []string) {
 	url := model.NewUrl(args[0])
 
+	if !url.Valid() {
+		log.Println("Invalid repository url")
+		os.Exit(1)
+	}
+
 	cloner := service.Kaminoan{}
-	cloner.Clone(url)
+	cobra.CheckErr(cloner.Clone(url))
 }
