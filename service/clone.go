@@ -1,9 +1,9 @@
 package service
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
+	prompt "github.com/Acr0most/kaminoan/helper"
 	"github.com/Acr0most/kaminoan/model"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport"
@@ -64,12 +64,9 @@ func (t *Kaminoan) Clone(repository *model.Repository) error {
 }
 
 func perhapsUpdateRepository(path string, repository *model.Repository) error {
-	fmt.Printf("Repository %s already exists. Update [y/n]?\n", repository.Url())
-	reader := bufio.NewReader(os.Stdin)
-	text, _ := reader.ReadString('\n')
-	text = strings.Trim(text, " \n")
+	update := prompt.YesNo(fmt.Sprintf("Repository %s already exists. Update?", repository.Url()), true)
 
-	if text == "y" {
+	if update {
 		repo, err := git.PlainOpen(path)
 		if err != nil {
 			return err
@@ -93,10 +90,19 @@ func perhapsUpdateRepository(path string, repository *model.Repository) error {
 }
 
 func getSSHAuth() (transport.AuthMethod, error) {
-	password := viper.GetString("auth.private_key_password")
+	var password string
+	var err error
+
 	privateKeyFile := viper.GetString("auth.private_key_file")
 
-	_, err := os.Stat(privateKeyFile)
+	// TODO perhaps enable
+	// if viper.GetBool("auth.private_key_requires_password") {
+	{
+		password = prompt.Password()
+	}
+	// }
+
+	_, err = os.Stat(privateKeyFile)
 	if err != nil {
 		return nil, err
 	}

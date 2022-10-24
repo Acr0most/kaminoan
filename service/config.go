@@ -1,13 +1,12 @@
 package service
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
+	prompt "github.com/Acr0most/kaminoan/helper"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
-	"strings"
 )
 
 var (
@@ -40,22 +39,17 @@ func InitConfig(cfgFile string) error {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	} else {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			fmt.Printf(`Missing config file.
+			workspace := prompt.Prompt(`Missing config file.
 To create the file we need to know your default workspace directory.
-If you want to clone repository absolute to the directory you're calling the command use empty string.
-> `)
+If you want to clone repository absolute to the directory you're calling the command use empty string.`, "")
+
 			if err := createDirAndConfigFile(); err != nil {
-				panic(err)
 				return err
 			}
 
-			reader := bufio.NewReader(os.Stdin)
-			text, _ := reader.ReadString('\n')
-			text = strings.Trim(text, " \n")
-
-			viper.Set("workspace", text)
+			viper.Set("workspace", workspace)
 			viper.Set("auth.private_key_file", home+"/.ssh/id_rsa")
-			viper.Set("auth.private_key_password", "")
+			viper.Set("auth.private_key_requires_password", true)
 
 			return viper.WriteConfig()
 		} else {
